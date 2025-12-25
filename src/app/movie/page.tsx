@@ -6,36 +6,36 @@ import VideoModal from '@/components/movie/VideoModal';
 
 export default function MoviesPage() {
   const [movies, setMovies] = useState<any[]>([]);
-  const [playUrl, setPlayUrl] = useState<string | null>(null);
+  const [open, setOpen] = useState(false);
+  const [selectedMovie, setSelectedMovie] = useState('');
 
   useEffect(() => {
     fetch('http://localhost:8080/api/movies/getAllMovies')
       .then((res) => res.json())
-      .then((data) => {
-        setMovies(data);
-        console.log(data);
-      })
-      .catch(console.error);
+      .then(setMovies);
   }, []);
 
   return (
-    <div className="px-12 py-10 bg-black min-h-screen">
-      <h1 className="text-3xl font-bold text-white mb-6">Movies</h1>
+    <div className="px-12 py-10 bg-black min-h-screen text-white">
+      <h1 className="text-3xl font-bold mb-6">Movies</h1>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+      <div className="grid grid-cols-6 gap-6">
         {movies.map((movie) => (
           <MovieCard
             key={movie.Id}
             movie={movie}
-            onPlay={(url) => setPlayUrl(url)}
+            onPlay={(url:any) => {
+              setSelectedMovie(url);
+              setOpen(true);
+            }}
           />
         ))}
       </div>
 
-      {playUrl && (
+      {open && (
         <VideoModal
-          url={playUrl}
-          onClose={() => setPlayUrl(null)}
+          movieUrl={selectedMovie}
+          onClose={() => setOpen(false)}
         />
       )}
     </div>

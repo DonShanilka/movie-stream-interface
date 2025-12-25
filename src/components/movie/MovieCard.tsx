@@ -8,6 +8,10 @@ interface Props {
 }
 
 export default function MovieCard({ movie, onPlay }: Props) {
+  const streamUrl = `http://localhost:8080/api/movies/getAllMovies?movie=${encodeURIComponent(
+    movie.MovieURL
+  )}`;
+
   return (
     <div className="group w-60 cursor-pointer">
       <div className="relative rounded-lg overflow-hidden">
@@ -17,10 +21,9 @@ export default function MovieCard({ movie, onPlay }: Props) {
           className="h-80 w-full object-cover transition-transform group-hover:scale-110"
         />
 
-        {/* Overlay */}
         <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition">
           <button
-            onClick={() => onPlay(movie.MovieURL)}
+            onClick={() => onPlay(streamUrl)}
             className="bg-yellow-400 p-4 rounded-full text-black hover:scale-110 transition"
           >
             <Play className="w-6 h-6 fill-current" />
