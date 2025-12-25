@@ -1,65 +1,182 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import { useState } from 'react';
+import { Play, Plus, Search, User, Volume2, VolumeX, Pause } from 'lucide-react';
+
+// Mock data
+const continueWatching = [
+  { id: 1, title: 'Friends', image: 'https://images.unsplash.com/photo-1574267432644-f610c36e6a9f?w=300&h=400&fit=crop', progress: 45 },
+  { id: 2, title: 'Gossip Girl', image: 'https://images.unsplash.com/photo-1598899134739-24c46f58b8c0?w=300&h=400&fit=crop', progress: 67 },
+  { id: 3, title: 'Action Movie', image: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=300&h=400&fit=crop', progress: 23 },
+  { id: 4, title: 'Fight Club', image: 'https://images.unsplash.com/photo-1594908900066-3f47337549d8?w=300&h=400&fit=crop', progress: 89 },
+  { id: 5, title: 'Rick and Morty', image: 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=300&h=400&fit=crop', progress: 34 },
+  { id: 6, title: 'The Great Wall', image: 'https://images.unsplash.com/photo-1485846234645-a62644f84728?w=300&h=400&fit=crop', progress: 56 },
+];
+
+const trendingNow = [
+  { id: 7, title: 'Sports Event', image: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=300&h=400&fit=crop' },
+  { id: 8, title: 'In Time', image: 'https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=300&h=400&fit=crop' },
+  { id: 9, title: 'Divergent', image: 'https://images.unsplash.com/photo-1512070679279-8988d32161be?w=300&h=400&fit=crop' },
+  { id: 10, title: 'Aquaman', image: 'https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?w=300&h=400&fit=crop' },
+  { id: 11, title: 'Drama Series', image: 'https://images.unsplash.com/photo-1518676590629-3dcbd9c5a5c9?w=300&h=400&fit=crop' },
+  { id: 12, title: 'Comedy Show', image: 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=300&h=400&fit=crop' },
+];
+
+export default function StreamingPlatform() {
+  const [isMuted, setIsMuted] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [activeTab, setActiveTab] = useState('Film');
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="min-h-screen bg-black text-white">
+      {/* Navigation */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-b from-black/80 to-transparent px-8 py-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-8">
+            <h1 className="text-2xl font-bold text-yellow-400">StreamBerry</h1>
+            <div className="flex gap-6">
+              {['Film', 'Serie', 'Live TV'].map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={`text-sm font-medium transition-colors ${
+                    activeTab === tab ? 'text-white' : 'text-gray-400 hover:text-white'
+                  }`}
+                >
+                  {tab}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="flex items-center gap-4">
+            <button className="p-2 hover:bg-white/10 rounded-full transition-colors">
+              <Search className="w-5 h-5" />
+            </button>
+            <button className="p-2 hover:bg-white/10 rounded-full transition-colors">
+              <User className="w-5 h-5" />
+            </button>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </nav>
+
+      {/* Hero Section */}
+      <div className="relative h-[85vh] overflow-hidden">
+        {/* Background Image */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage: 'url(https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=1920&h=1080&fit=crop)',
+            backgroundPosition: 'center 20%'
+          }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-black via-black/70 to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
         </div>
-      </main>
+
+        {/* Hero Content */}
+        <div className="relative h-full flex items-center px-12">
+          <div className="max-w-2xl">
+            <p className="text-sm text-gray-300 mb-4">FictR / SciFi</p>
+            <h2 className="text-6xl font-black mb-6 leading-tight tracking-tight">
+              EVERYTHING<br />
+              EVERYWHERE<br />
+              ALL AT ONCE
+            </h2>
+            <div className="flex items-center gap-4 text-sm text-gray-300 mb-6">
+              <span>2022</span>
+              <span>•</span>
+              <span>139 minutes</span>
+            </div>
+            <p className="text-gray-300 leading-relaxed mb-8 max-w-lg">
+              A middle-aged Chinese immigrant is swept up into an insane adventure where she alone can save existence by exploring other universes and connecting with the lives she could have led.
+            </p>
+            <div className="flex gap-4">
+              <button className="flex items-center gap-2 bg-yellow-400 text-black px-8 py-3 rounded-lg font-semibold hover:bg-yellow-500 transition-all transform hover:scale-105">
+                <Play className="w-5 h-5 fill-current" />
+                Watch Now
+              </button>
+              <button className="flex items-center justify-center w-12 h-12 bg-white/20 backdrop-blur-sm rounded-lg hover:bg-white/30 transition-all">
+                <Plus className="w-6 h-6" />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Video Controls */}
+        <div className="absolute bottom-8 right-8 flex gap-3">
+          <button 
+            onClick={() => setIsMuted(!isMuted)}
+            className="p-3 bg-black/50 backdrop-blur-sm rounded-lg hover:bg-black/70 transition-all"
+          >
+            {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
+          </button>
+          <button 
+            onClick={() => setIsPlaying(!isPlaying)}
+            className="p-3 bg-black/50 backdrop-blur-sm rounded-lg hover:bg-black/70 transition-all"
+          >
+            {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
+          </button>
+        </div>
+      </div>
+
+      {/* Continue Watching */}
+      <div className="px-12 py-8 -mt-32 relative z-10">
+        <h3 className="text-2xl font-bold mb-6">Continue Watching</h3>
+        <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+          {continueWatching.map((item) => (
+            <div key={item.id} className="flex-shrink-0 w-52 group cursor-pointer">
+              <div className="relative rounded-lg overflow-hidden mb-2">
+                <img
+                  src={item.image}
+                  alt={item.title}
+                  className="w-full h-32 object-cover transform group-hover:scale-110 transition-transform duration-300"
+                />
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <Play className="w-10 h-10 fill-current" />
+                </div>
+                {/* Progress Bar */}
+                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gray-700">
+                  <div 
+                    className="h-full bg-yellow-400"
+                    style={{ width: `${item.progress}%` }}
+                  ></div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Trending Now */}
+      <div className="px-12 py-8">
+        <h3 className="text-2xl font-bold mb-6">Trending Now</h3>
+        <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+          {trendingNow.map((item) => (
+            <div key={item.id} className="flex-shrink-0 w-52 group cursor-pointer">
+              <div className="relative rounded-lg overflow-hidden mb-2">
+                <img
+                  src={item.image}
+                  alt={item.title}
+                  className="w-full h-32 object-cover transform group-hover:scale-110 transition-transform duration-300"
+                />
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <Play className="w-10 h-10 fill-current" />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <style jsx global>{`
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
     </div>
   );
 }
