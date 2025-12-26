@@ -8,33 +8,40 @@ interface Props {
 }
 
 export default function MovieCard({ movie, onPlay }: Props) {
+  // Backend proxy streaming URL
   const streamUrl = `http://localhost:8080/api/movies/getAllMovies?movie=${encodeURIComponent(
     movie.MovieURL
   )}`;
 
   return (
-    <div className="group w-60 cursor-pointer">
-      <div className="relative rounded-lg overflow-hidden">
+    <div className="relative group cursor-pointer">
+      {/* Thumbnail */}
+      <div className="overflow-hidden rounded-lg">
         <img
           src={`data:image/png;base64,${movie.Thumbnail}`}
           alt={movie.Title}
-          className="h-80 w-full object-cover transition-transform group-hover:scale-110"
+          className="h-72 w-full object-cover transition-transform duration-300 group-hover:scale-110"
         />
-
-        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition">
-          <button
-            onClick={() => onPlay(streamUrl)}
-            className="bg-yellow-400 p-4 rounded-full text-black hover:scale-110 transition"
-          >
-            <Play className="w-6 h-6 fill-current" />
-          </button>
-        </div>
       </div>
 
-      <h3 className="mt-2 font-semibold text-white">{movie.Title}</h3>
-      <p className="text-sm text-gray-400">
-        {movie.ReleaseYear} • {movie.Genre}
-      </p>
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition duration-300 flex flex-col justify-end p-4">
+        
+        {/* Play Button */}
+        <button
+          onClick={() => onPlay(streamUrl)}
+          className="flex items-center gap-2 bg-white text-black px-4 py-2 rounded font-semibold w-fit hover:bg-gray-200"
+        >
+          <Play className="w-5 h-5 fill-black" />
+          Play
+        </button>
+
+        {/* Movie Info */}
+        <h3 className="mt-3 text-lg font-bold">{movie.Title}</h3>
+        <p className="text-sm text-gray-300">
+          {movie.ReleaseYear} • {movie.Genre}
+        </p>
+      </div>
     </div>
   );
 }

@@ -10,10 +10,10 @@ export default function VideoModal({
   onClose: () => void;
 }) {
   return (
-    <div className="fixed inset-0 z-50 bg-black flex items-center justify-center">
+    <div className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center">
       <button
         onClick={onClose}
-        className="absolute top-6 right-6 text-white z-50"
+        className="absolute top-6 right-6 text-white"
       >
         <X className="w-8 h-8" />
       </button>
@@ -23,7 +23,7 @@ export default function VideoModal({
         controls
         autoPlay
         playsInline
-        className="w-full max-w-5xl"
+        className="w-full max-w-6xl rounded-lg"
       />
     </div>
   );
