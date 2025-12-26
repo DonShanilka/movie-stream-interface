@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { Play, Plus, ThumbsUp, X, Volume2, VolumeX } from 'lucide-react';
+import { Play, Plus, ThumbsUp, X } from 'lucide-react';
+import VideoPlayer from './VideoPlayer';
 
 interface Movie {
   Title: string;
@@ -23,206 +24,151 @@ interface Props {
 }
 
 export default function MovieCard({ movie }: Props) {
-  const [showModal, setShowModal] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(true);
+  const [showBannerModal, setShowBannerModal] = useState(false);
+  const [showPlayerModal, setShowPlayerModal] = useState(false);
+  const [animateBanner, setAnimateBanner] = useState(false);
+  const [animatePlayer, setAnimatePlayer] = useState(false);
 
-  // Backend proxy streaming URL
-  const streamUrl = `http://localhost:8080/api/movies/stream?movie=${encodeURIComponent(
+  const streamUrl = `http://localhost:8080/api/movies/getAllMovies?movie=${encodeURIComponent(
     movie.MovieURL
   )}`;
 
-  const handlePlayClick = () => {
-    setIsPlaying(true);
+  const openBannerModal = () => {
+    setShowBannerModal(true);
+    setTimeout(() => setAnimateBanner(true), 30);
   };
 
-  const handleCloseModal = () => {
-    setShowModal(false);
-    setIsPlaying(false);
+  const closeBannerModal = () => {
+    setAnimateBanner(false);
+    setTimeout(() => setShowBannerModal(false), 200);
   };
 
-  // Format duration (assuming it's in minutes)
+  const openPlayerModal = () => {
+    setShowPlayerModal(true);
+    setTimeout(() => setAnimatePlayer(true), 30);
+  };
+
+  const closePlayerModal = () => {
+    setAnimatePlayer(false);
+    setTimeout(() => setShowPlayerModal(false), 200);
+  };
+
   const formatDuration = (minutes: number) => {
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
-    return `${hours}h ${mins}m`;
+    const h = Math.floor(minutes / 60);
+    const m = minutes % 60;
+    return `${h}h ${m}m`;
   };
 
   return (
     <>
-      {/* Movie Card */}
-      <div 
-        className="relative group cursor-pointer"
-        onMouseEnter={() => setShowModal(true)}
-      >
-        {/* Thumbnail */}
-        <div className="overflow-hidden rounded-lg">
-          <img
-            src={`data:image/png;base64,${movie.Thumbnail}`}
-            alt={movie.Title}
-            className="h-72 w-full object-cover transition-transform duration-300 group-hover:scale-110"
-          />
-        </div>
-
-        {/* Simple Hover Overlay */}
-        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+      {/* MOVIE CARD */}
+      <div className="relative group cursor-pointer" onMouseEnter={openBannerModal}>
+        <img
+          src={`data:image/png;base64,${movie.Thumbnail}`}
+          alt={movie.Title}
+          className="h-72 w-full object-cover rounded-lg transition-transform duration-300 group-hover:scale-110"
+        />
+        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition flex items-center justify-center rounded-lg">
           <Play className="w-16 h-16 text-white" />
         </div>
       </div>
 
-      {/* Modal Popup */}
-      {showModal && (
-        <div 
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
-          onClick={handleCloseModal}
+      {/* BANNER + DETAILS MODAL */}
+      {showBannerModal && (
+        <div
+          className={`fixed inset-0 z-50 bg-black/80 flex items-center justify-center transition-opacity duration-200 ${
+            animateBanner ? 'opacity-100' : 'opacity-0'
+          }`}
+          onClick={closeBannerModal}
         >
-          <div 
-            className="relative bg-neutral-900 rounded-xl overflow-hidden max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+          <div
             onClick={(e) => e.stopPropagation()}
+            className={`relative bg-neutral-900 rounded-xl overflow-hidden max-w-5xl w-full transform transition-all duration-200 ${
+              animateBanner ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
+            }`}
           >
-            {/* Close Button */}
+            {/* CLOSE */}
             <button
-              onClick={handleCloseModal}
-              className="absolute top-4 right-4 z-20 bg-neutral-900 rounded-full p-2 hover:bg-neutral-800 transition"
+              onClick={closeBannerModal}
+              className="absolute top-4 right-4 z-20 bg-black/70 p-2 rounded-full"
             >
               <X className="w-6 h-6 text-white" />
             </button>
 
-            {/* Video/Banner Section */}
-            <div className="relative h-[450px] bg-black">
-              {isPlaying ? (
-                <video
-                  src={streamUrl}
-                  controls
-                  autoPlay
-                  muted={isMuted}
-                  className="w-full h-full object-cover"
-                  controlsList="nodownload"
-                />
-              ) : (
-                <>
-                  <img
-                    src={`data:image/png;base64,${movie.Banner}`}
-                    alt={movie.Title}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-neutral-900 via-transparent to-transparent" />
-                  
-                  {/* Title Overlay */}
-                  <div className="absolute bottom-16 left-8 right-8">
-                    <h2 className="text-4xl font-bold text-white mb-4">
-                      {movie.Title}
-                    </h2>
-                    <div className="flex gap-3">
-                      <button
-                        onClick={handlePlayClick}
-                        className="flex items-center gap-2 bg-white text-black px-8 py-3 rounded font-bold hover:bg-gray-200 transition"
-                      >
-                        <Play className="w-5 h-5 fill-black" />
-                        Play
-                      </button>
-                      <button className="p-3 bg-neutral-800/80 rounded-full hover:bg-neutral-700 transition border-2 border-gray-500">
-                        <Plus className="w-6 h-6 text-white" />
-                      </button>
-                      <button className="p-3 bg-neutral-800/80 rounded-full hover:bg-neutral-700 transition border-2 border-gray-500">
-                        <ThumbsUp className="w-6 h-6 text-white" />
-                      </button>
-                      {isPlaying && (
-                        <button
-                          onClick={() => setIsMuted(!isMuted)}
-                          className="ml-auto p-3 bg-neutral-800/80 rounded-full hover:bg-neutral-700 transition border-2 border-gray-500"
-                        >
-                          {isMuted ? (
-                            <VolumeX className="w-6 h-6 text-white" />
-                          ) : (
-                            <Volume2 className="w-6 h-6 text-white" />
-                          )}
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                </>
-              )}
-            </div>
+            {/* BANNER IMAGE */}
+            <div className="relative h-[460px] bg-black">
+              <img
+                src={`data:image/png;base64,${movie.Banner}`}
+                className="w-full h-full object-cover"
+                alt={movie.Title}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
 
-            {/* Movie Details */}
-            <div className="p-8">
-              <div className="flex gap-8">
-                {/* Left Column */}
-                <div className="flex-1">
-                  {/* Stats */}
-                  <div className="flex items-center gap-4 mb-4 text-sm">
-                    <span className="text-green-500 font-semibold">
-                      {movie.Rating} Match
-                    </span>
-                    <span className="text-gray-300">{movie.ReleaseYear}</span>
-                    <span className="border border-gray-500 px-2 py-0.5 text-xs text-gray-300">
-                      {movie.AgeRating}
-                    </span>
-                    <span className="text-gray-300">{formatDuration(movie.Duration)}</span>
-                    <span className="border border-gray-500 px-2 py-0.5 text-xs text-gray-300">
-                      HD
-                    </span>
-                    <span className="border border-gray-500 px-2 py-0.5 text-xs text-gray-300">
-                      🔊
-                    </span>
-                  </div>
-
-                  {/* Description */}
-                  <p className="text-gray-300 leading-relaxed mb-6">
-                    {movie.Description}
-                  </p>
-                </div>
-
-                {/* Right Column */}
-                <div className="w-72 space-y-4 text-sm">
-                  <div>
-                    <span className="text-gray-500">Cast: </span>
-                    <span className="text-white">
-                      Nicolas Cage, Emma Stone, Ryan Reynolds, <span className="text-gray-400">more</span>
-                    </span>
-                  </div>
-
-                  <div>
-                    <span className="text-gray-500">Genres: </span>
-                    <span className="text-white">{movie.Genre}</span>
-                  </div>
-
-                  <div>
-                    <span className="text-gray-500">Language: </span>
-                    <span className="text-white">{movie.Language}</span>
-                  </div>
-
-                  <div>
-                    <span className="text-gray-500">Country: </span>
-                    <span className="text-white">{movie.Country}</span>
-                  </div>
-
-                  <div>
-                    <span className="text-gray-500">This Movie Is: </span>
-                    <span className="text-white">Imaginative, Feel-Good</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* More Like This Section */}
-              <div className="mt-12">
-                <h3 className="text-xl font-bold text-white mb-4">More Like This</h3>
-                <div className="grid grid-cols-3 gap-4">
-                  {[1, 2, 3].map((item) => (
-                    <div key={item} className="bg-neutral-800 rounded-lg overflow-hidden">
-                      <div className="h-32 bg-neutral-700" />
-                      <div className="p-3">
-                        <h4 className="text-white font-semibold text-sm mb-1">Similar Movie {item}</h4>
-                        <p className="text-gray-400 text-xs line-clamp-2">
-                          Another great movie you might enjoy watching.
-                        </p>
-                      </div>
-                    </div>
-                  ))}
+              {/* OVERLAY */}
+              <div className="absolute bottom-16 left-8 right-8">
+                <h2 className="text-4xl font-bold text-white mb-4">{movie.Title}</h2>
+                <div className="flex gap-3 items-center">
+                  <button
+                    onClick={openPlayerModal}
+                    className="bg-white text-black px-8 py-3 rounded font-bold flex items-center gap-2 hover:bg-gray-200 transition"
+                  >
+                    <Play className="w-5 h-5 fill-black" />
+                    Play
+                  </button>
+                  <button className="p-3 bg-neutral-800 rounded-full">
+                    <Plus className="text-white" />
+                  </button>
+                  <button className="p-3 bg-neutral-800 rounded-full">
+                    <ThumbsUp className="text-white" />
+                  </button>
                 </div>
               </div>
             </div>
+
+            {/* DETAILS */}
+            <div className="p-8 text-white">
+              <div className="flex gap-6 text-sm mb-4">
+                <span className="text-green-500 font-semibold">{movie.Rating} Match</span>
+                <span>{movie.ReleaseYear}</span>
+                <span className="border px-2">{movie.AgeRating}</span>
+                <span>{formatDuration(movie.Duration)}</span>
+                <span className="border px-2">HD</span>
+              </div>
+              <p className="text-gray-300 mb-6">{movie.Description}</p>
+              <div className="grid grid-cols-2 gap-4 text-sm text-gray-300">
+                <p><b>Genre:</b> {movie.Genre}</p>
+                <p><b>Language:</b> {movie.Language}</p>
+                <p><b>Country:</b> {movie.Country}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* FULL VIDEO PLAYER MODAL */}
+      {showPlayerModal && (
+        <div
+          className={`fixed inset-0 z-50 bg-black/90 flex items-center justify-center transition-opacity duration-200 ${
+            animatePlayer ? 'opacity-100' : 'opacity-0'
+          }`}
+          onClick={closePlayerModal}
+        >
+          <div
+            className={`relative w-full max-w-6xl transform transition-all duration-200 ${
+              animatePlayer ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
+            }`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* CLOSE VIDEO */}
+            <button
+              onClick={closePlayerModal}
+              className="absolute top-4 right-4 z-20 bg-black/70 p-2 rounded-full"
+            >
+              <X className="w-6 h-6 text-white" />
+            </button>
+
+            {/* VIDEO PLAYER */}
+            <VideoPlayer src={streamUrl} autoPlay />
           </div>
         </div>
       )}
