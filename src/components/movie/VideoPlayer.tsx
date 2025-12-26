@@ -29,9 +29,7 @@ const VideoPlayer: React.FC<Props> = ({ src, autoPlay = false }) => {
     const video = videoRef.current;
     if (!video) return;
 
-    if (autoPlay) {
-      video.play();
-    }
+    if (autoPlay) video.play();
 
     const updateTime = () => setCurrentTime(video.currentTime);
     const updateDuration = () => setDuration(video.duration);
@@ -49,17 +47,16 @@ const VideoPlayer: React.FC<Props> = ({ src, autoPlay = false }) => {
     const video = videoRef.current;
     if (!video) return;
 
-    if (isPlaying) {
-      video.pause();
-    } else {
-      video.play();
-    }
+    if (isPlaying) video.pause();
+    else video.play();
+
     setIsPlaying(!isPlaying);
   };
 
   const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
     const video = videoRef.current;
     if (!video) return;
+
     const time = parseFloat(e.target.value);
     video.currentTime = time;
     setCurrentTime(time);
@@ -68,6 +65,7 @@ const VideoPlayer: React.FC<Props> = ({ src, autoPlay = false }) => {
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const video = videoRef.current;
     if (!video) return;
+
     const v = parseFloat(e.target.value);
     video.volume = v;
     setVolume(v);
@@ -77,6 +75,7 @@ const VideoPlayer: React.FC<Props> = ({ src, autoPlay = false }) => {
   const toggleMute = () => {
     const video = videoRef.current;
     if (!video) return;
+
     video.muted = !isMuted;
     setIsMuted(!isMuted);
   };
@@ -84,6 +83,7 @@ const VideoPlayer: React.FC<Props> = ({ src, autoPlay = false }) => {
   const skip = (sec: number) => {
     const video = videoRef.current;
     if (!video) return;
+
     video.currentTime = Math.max(0, Math.min(duration, video.currentTime + sec));
   };
 
@@ -96,9 +96,7 @@ const VideoPlayer: React.FC<Props> = ({ src, autoPlay = false }) => {
   };
 
   const formatTime = (t: number) =>
-    `${Math.floor(t / 60)
-      .toString()
-      .padStart(2, '0')}:${Math.floor(t % 60)
+    `${Math.floor(t / 60).toString().padStart(2, '0')}:${Math.floor(t % 60)
       .toString()
       .padStart(2, '0')}`;
 
@@ -107,6 +105,7 @@ const VideoPlayer: React.FC<Props> = ({ src, autoPlay = false }) => {
       ref={containerRef}
       className="relative bg-slate-900 overflow-hidden"
       onMouseEnter={() => setShowControls(true)}
+      onMouseLeave={() => setShowControls(false)}
     >
       {/* Video */}
       <video
@@ -135,7 +134,7 @@ const VideoPlayer: React.FC<Props> = ({ src, autoPlay = false }) => {
           }}
         />
 
-        <div className="flex justify-between items-center text-yellow-400">
+        <div className="flex justify-between items-center text-white gap-4">
           <div className="flex items-center gap-4">
             <button onClick={togglePlay}>
               {isPlaying ? <Pause size={26} /> : <Play size={26} />}
@@ -149,9 +148,24 @@ const VideoPlayer: React.FC<Props> = ({ src, autoPlay = false }) => {
               <SkipForward size={22} />
             </button>
 
-            <button onClick={toggleMute}>
-              {isMuted ? <VolumeX size={22} /> : <Volume2 size={22} />}
-            </button>
+            {/* Mute / Volume */}
+            <div className="flex items-center gap-2">
+              <button onClick={toggleMute}>
+                {isMuted || volume === 0 ? <VolumeX size={22} /> : <Volume2 size={22} />}
+              </button>
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.01"
+                value={volume}
+                onChange={handleVolumeChange}
+                className="w-20 h-1 slider"
+                style={{
+                  background: `linear-gradient(to right, #facc15 ${volume * 100}%, #374151 0%)`,
+                }}
+              />
+            </div>
 
             <span className="text-sm">
               {formatTime(currentTime)} / {formatTime(duration)}

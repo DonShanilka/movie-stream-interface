@@ -60,13 +60,13 @@ export default function MovieCard({ movie }: Props) {
   };
 
   return (
-    <>
+    <div>
       {/* MOVIE CARD */}
       <div className="relative group cursor-pointer" onMouseEnter={openBannerModal}>
         <img
           src={`data:image/png;base64,${movie.Thumbnail}`}
           alt={movie.Title}
-          className="h-72 w-full object-cover rounded-lg transition-transform duration-300 group-hover:scale-110"
+          className="h-72 w-full object-cover rounded-lg transition-transform duration-1000 group-hover:scale-110"
         />
         <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition flex items-center justify-center rounded-lg">
           <Play className="w-16 h-16 text-white" />
@@ -76,14 +76,14 @@ export default function MovieCard({ movie }: Props) {
       {/* BANNER + DETAILS MODAL */}
       {showBannerModal && (
         <div
-          className={`fixed inset-0 z-50 bg-black/80 flex items-center justify-center transition-opacity duration-200 ${
+          className={`fixed inset-0 z-50 bg-black/80 flex items-center justify-center transition-opacity duration-1000 ${
             animateBanner ? 'opacity-100' : 'opacity-0'
           }`}
           onClick={closeBannerModal}
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className={`relative bg-neutral-900 rounded-xl overflow-hidden max-w-5xl w-full transform transition-all duration-200 ${
+            className={`relative bg-neutral-900 rounded-xl overflow-hidden max-w-3xl w-full transform transition-all duration-1000 ${
               animateBanner ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
             }`}
           >
@@ -110,7 +110,7 @@ export default function MovieCard({ movie }: Props) {
                 <div className="flex gap-3 items-center">
                   <button
                     onClick={openPlayerModal}
-                    className="bg-white text-black px-8 py-3 rounded font-bold flex items-center gap-2 hover:bg-gray-200 transition"
+                    className="bg-yellow-300 text-black px-8 py-3 rounded font-bold flex items-center gap-2 hover:bg-yellow-400 transition"
                   >
                     <Play className="w-5 h-5 fill-black" />
                     Play
@@ -172,6 +172,6 @@ export default function MovieCard({ movie }: Props) {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }
