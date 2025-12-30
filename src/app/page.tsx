@@ -8,8 +8,9 @@ import Navbar from "../components/layout/Navbar";
 const featuredMovies = [
   {
     id: 1,
-    title: "Avatar Fire and Ash",
+    title: "Jurassic World Rebith",
     genre: "Sci-Fi / Adventure",
+    discription: "Five years post-Jurassic World: Dominion (2022), an expedition braves isolated equatorial regions to extract DNA from three massive prehistoric creatures for a groundbreaking medical breakthrough.",
     year: 2025,
     duration: "200 min",
     rating: 8.2,
@@ -82,21 +83,22 @@ export default function Home() {
         {featuredMovies.map((movie) => (
           <div
             key={movie.id}
-            className="relative h-[85vh] pt-20 overflow-hidden"
+            className="relative h-[90vh] pt-20 overflow-hidden"
           >
             <div
-              className="absolute inset-0 bg-cover bg-center scale-105"
+              className="absolute inset-0 bg-cover bg-center scale-100 transition-transform duration-2000"
               style={{ backgroundImage: `url(${movie.image})` }}
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-black via-black/70 to-transparent" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-r from-black via-black/10 to-transparent" />
+              {/* <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" /> */}
             </div>
 
             <div className="relative h-full flex items-center px-12">
               <div className="max-w-2xl">
                 <p className="text-yellow-400 mb-3 text-sm">{movie.genre}</p>
 
-                <h1 className="text-6xl font-black mb-4">{movie.title}</h1>
+                <h1 className="text-3xl font-black mb-4">{movie.title}</h1>
+                <p className="text-gray-400 mb-6 w-96">{movie.discription}</p>
 
                 <div className="flex gap-4 text-sm text-gray-300 mb-6">
                   <span>{movie.year}</span>
