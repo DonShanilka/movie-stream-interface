@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import SeriesCard from '@/components/series/SeriesCard';
+import SeriesModal from '@/components/series/SeriesModal';
 
 interface TVSeries {
   ID: number;
@@ -26,6 +27,8 @@ export default function TVSeriesPage() {
   const [episodesMap, setEpisodesMap] = useState<Record<number, Episode[]>>({});
   const [loadingEpisodes, setLoadingEpisodes] = useState<Record<number, boolean>>({});
 
+  const [selectedSeries, setSelectedSeries] = useState<TVSeries | null>(null);
+
   // Load series
   useEffect(() => {
     fetch('http://localhost:8080/api/series/getAllSeries')
@@ -34,7 +37,7 @@ export default function TVSeriesPage() {
       .catch(console.error);
   }, []);
 
-  // Load episodes by series
+  // Load episodes
   const loadEpisodes = (seriesID: number) => {
     if (episodesMap[seriesID]) return;
 
@@ -60,12 +63,23 @@ export default function TVSeriesPage() {
           <SeriesCard
             key={series.ID}
             series={series}
-            episodes={episodesMap[series.ID]}
-            loading={!!loadingEpisodes[series.ID]}
-            onLoadEpisodes={loadEpisodes}
+            onClick={() => {
+              setSelectedSeries(series);
+              loadEpisodes(series.ID);
+            }}
           />
         ))}
       </div>
+
+      {/* ✅ SINGLE MODAL */}
+      {selectedSeries && (
+        <SeriesModal
+          series={selectedSeries}
+          episodes={episodesMap[selectedSeries.ID]}
+          loading={!!loadingEpisodes[selectedSeries.ID]}
+          onClose={() => setSelectedSeries(null)}
+        />
+      )}
     </div>
   );
 }

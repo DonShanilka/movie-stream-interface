@@ -1,61 +1,103 @@
 'use client';
 
-import { useState } from 'react';
-import SeriesModal from './SeriesModal';
+import { useMemo, useState } from 'react';
+import EpisodeCard from './EpisodeCard';
+import { X } from 'lucide-react';
 
 interface TVSeries {
   ID: number;
   Title: string;
   Description: string;
-  Thumbnail: string;
+  Banner: string;
 }
 
 interface Episode {
   ID: number;
-  SeriesID: number;
   SeasonNumber: number;
   EpisodeNumber: number;
   Title: string;
   Episode: string;
 }
 
-interface Props {
+export default function SeriesModal({
+  series,
+  episodes,
+  loading,
+  onClose,
+}: {
   series: TVSeries;
   episodes?: Episode[];
   loading: boolean;
-  onLoadEpisodes: (seriesID: number) => void;
-}
+  onClose: () => void;
+}) {
+  const [season, setSeason] = useState(1);
 
-export default function SeriesCard(props: Props) {
-  const [open, setOpen] = useState(false);
+  const seasons = useMemo(() => {
+    if (!episodes) return [];
+    return [...new Set(episodes.map((e) => e.SeasonNumber))];
+  }, [episodes]);
+
+  const filteredEpisodes = useMemo(
+    () => episodes?.filter((e) => e.SeasonNumber === season),
+    [episodes, season]
+  );
 
   return (
-    <>
-      {/* CARD */}
+    <div
+      className="fixed inset-0 z-50 bg-black/80 flex justify-center items-start"
+      onClick={onClose}
+    >
       <div
-        onClick={() => {
-          setOpen(true);
-          props.onLoadEpisodes(props.series.ID);
-        }}
-        className="cursor-pointer bg-neutral-900 rounded-lg overflow-hidden hover:scale-105 transition"
+        onClick={(e) => e.stopPropagation()}
+        className="bg-neutral-900 w-full max-w-4xl rounded-xl mt-10 overflow-hidden"
       >
-        <img
-          src={`data:image/png;base64,${props.series.Thumbnail}`}
-          alt={props.series.Title}
-          className="w-full h-48 object-cover"
-        />
-        <div className="p-3">
-          <h2 className="text-sm font-bold">{props.series.Title}</h2>
+        {/* Banner */}
+        <div className="relative h-72">
+          <img
+            src={`data:image/png;base64,${series.Banner}`}
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent" />
+
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 bg-black/70 p-2 rounded-full"
+          >
+            <X />
+          </button>
+
+          <h1 className="absolute bottom-6 left-6 text-3xl font-bold">
+            {series.Title}
+          </h1>
+        </div>
+
+        <div className="p-6">
+          <p className="text-gray-300 mb-4">{series.Description}</p>
+
+          {/* Season selector */}
+          {seasons.length > 0 && (
+            <select
+              value={season}
+              onChange={(e) => setSeason(Number(e.target.value))}
+              className="bg-neutral-800 px-3 py-2 rounded mb-4"
+            >
+              {seasons.map((s) => (
+                <option key={s} value={s}>
+                  Season {s}
+                </option>
+              ))}
+            </select>
+          )}
+
+          {loading && <p>Loading episodes…</p>}
+
+          <div className="space-y-3">
+            {filteredEpisodes?.map((ep) => (
+              <EpisodeCard key={ep.ID} episode={ep} />
+            ))}
+          </div>
         </div>
       </div>
-
-      {/* MODAL */}
-      {open && (
-        <SeriesModal
-          {...props}
-          onClose={() => setOpen(false)}
-        />
-      )}
-    </>
+    </div>
   );
 }
