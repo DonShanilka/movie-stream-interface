@@ -6,7 +6,7 @@ import { Search, User } from 'lucide-react';
 const navItems = [
   { name: 'Home', href: '/' },
   { name: 'Movies', href: '/movie' },
-  { name: 'TV Series', href: '/tv-series' },
+  { name: 'TV Series', href: '/tv' },
   { name: 'New & Popular', href: '/new-popular' },
   { name: 'My List', href: '/my-list' },
 ];
