@@ -66,7 +66,7 @@ export default function MovieCard({ movie }: Props) {
         <img
           src={`data:image/png;base64,${movie.Thumbnail}`}
           alt={movie.Title}
-          className="h-72 w-full object-cover rounded-lg transition-transform duration-1000 group-hover:scale-110"
+          className="h-72 w-full object-cover rounded-lg transition-transform duration-1000 delay-400 group-hover:scale-110"
         />
         <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition flex items-center justify-center rounded-lg">
           <Play className="w-16 h-16 text-white" />

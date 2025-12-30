@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import MovieCard from '@/components/movie/MovieCard';
 import VideoModal from '@/components/movie/VideoModal';
+import Navbar from '@/components/layout/Navbar';
 
 export default function MoviesPage() {
   const [movies, setMovies] = useState<any[]>([]);
@@ -16,7 +17,9 @@ export default function MoviesPage() {
   }, []);
 
   return (
-    <div className="px-12 py-10 bg-black min-h-screen text-white">
+    <div>
+        <Navbar />
+        <div className="px-12 py-24 bg-black min-h-screen text-white">
       <h1 className="text-3xl font-bold mb-6">Movies</h1>
 
       <div className="grid grid-cols-6 gap-6">
@@ -38,6 +41,7 @@ export default function MoviesPage() {
           onClose={() => setOpen(false)}
         />
       )}
+    </div>
     </div>
   );
 }
