@@ -10,7 +10,8 @@ const featuredMovies = [
     id: 1,
     title: "Jurassic World Rebith",
     genre: "Sci-Fi / Adventure",
-    discription: "Five years post-Jurassic World: Dominion (2022), an expedition braves isolated equatorial regions to extract DNA from three massive prehistoric creatures for a groundbreaking medical breakthrough.",
+    discription:
+      "Five years post-Jurassic World: Dominion (2022), an expedition braves isolated equatorial regions to extract DNA from three massive prehistoric creatures for a groundbreaking medical breakthrough.",
     year: 2025,
     duration: "200 min",
     rating: 8.2,
