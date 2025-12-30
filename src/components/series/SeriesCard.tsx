@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import EpisodeCard from './EpisodeCard';
+import { X } from 'lucide-react';
 
 interface TVSeries {
   ID: number;
@@ -23,85 +24,83 @@ interface Props {
   series: TVSeries;
   episodes?: Episode[];
   loading: boolean;
-  onLoadEpisodes: (seriesID: number) => void;
+  onClose: () => void;
 }
 
-export default function SeriesCard({
+export default function SeriesModal({
   series,
   episodes,
   loading,
-  onLoadEpisodes,
+  onClose,
 }: Props) {
-  const [selectedSeason, setSelectedSeason] = useState<number>(1);
+  const [season, setSeason] = useState(1);
 
-  // 🔹 Get unique seasons from episodes
   const seasons = useMemo(() => {
     if (!episodes) return [];
-    return Array.from(
-      new Set(episodes.map((ep) => ep.SeasonNumber))
-    ).sort((a, b) => a - b);
+    return [...new Set(episodes.map((e) => e.SeasonNumber))];
   }, [episodes]);
 
-  // 🔹 Filter episodes by season
   const filteredEpisodes = useMemo(() => {
-    return episodes?.filter((ep) => ep.SeasonNumber === selectedSeason);
-  }, [episodes, selectedSeason]);
+    return episodes?.filter((e) => e.SeasonNumber === season);
+  }, [episodes, season]);
 
   return (
-    <div className="group relative bg-neutral-900 rounded-lg overflow-hidden transform transition hover:scale-105">
-      {/* Thumbnail */}
-      <img
-        src={`data:image/png;base64,${series.Thumbnail}`}
-        alt={series.Title}
-        className="w-full h-48 object-cover"
-      />
+    <div
+      className="fixed inset-0 z-50 bg-black/80 flex justify-center items-start overflow-y-auto"
+      onClick={onClose}
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="bg-neutral-900 w-full max-w-4xl rounded-xl overflow-hidden mt-10"
+      >
+        {/* BANNER */}
+        <div className="relative h-72">
+          <img
+            src={`data:image/png;base64,${series.Thumbnail}`}
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent" />
 
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition" />
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 bg-black/70 p-2 rounded-full"
+          >
+            <X className="text-white" />
+          </button>
 
-      <div className="relative p-4">
-        <h2 className="text-lg font-bold">{series.Title}</h2>
+          <div className="absolute bottom-6 left-6">
+            <h1 className="text-3xl font-bold">{series.Title}</h1>
+          </div>
+        </div>
 
-        <p className="text-xs text-gray-300 line-clamp-2 mb-3">
-          {series.Description}
-        </p>
+        {/* DETAILS */}
+        <div className="p-6">
+          <p className="text-gray-300 mb-4">{series.Description}</p>
 
-        {/* Load Episodes Button */}
-        <button
-          onClick={() => onLoadEpisodes(series.ID)}
-          className="bg-yellow-400 text-black px-3 py-1 rounded text-sm font-semibold hover:bg-yellow-500"
-        >
-          {loading ? 'Loading…' : 'Episodes'}
-        </button>
-
-        {/* Season Selector */}
-        {episodes && seasons.length > 0 && (
-          <div className="mt-3">
+          {/* SEASON SELECT */}
+          {seasons.length > 0 && (
             <select
-              value={selectedSeason}
-              onChange={(e) => {
-                setSelectedSeason(Number(e.target.value));
-                console.log(seasons.length);
-              }}
-              className="w-full bg-neutral-800 text-white text-sm px-2 py-1 rounded"
+              value={season}
+              onChange={(e) => setSeason(Number(e.target.value))}
+              className="bg-neutral-800 px-3 py-2 rounded mb-4"
             >
-              {seasons.map((season) => (
-                <option key={season} value={season}>
-                  Season {season}
+              {seasons.map((s) => (
+                <option key={s} value={s}>
+                  Season {s}
                 </option>
               ))}
             </select>
-          </div>
-        )}
+          )}
 
-        {/* Episodes List */}
-        {filteredEpisodes && (
-          <div className="mt-3 space-y-2 max-h-60 overflow-y-auto">
-            {filteredEpisodes.map((ep) => (
+          {/* EPISODES */}
+          {loading && <p>Loading episodes…</p>}
+
+          <div className="space-y-3">
+            {filteredEpisodes?.map((ep) => (
               <EpisodeCard key={ep.ID} episode={ep} />
             ))}
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
