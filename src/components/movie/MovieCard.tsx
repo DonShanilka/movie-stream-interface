@@ -76,16 +76,14 @@ export default function MovieCard({ movie }: Props) {
       {/* BANNER + DETAILS MODAL */}
       {showBannerModal && (
         <div
-          className={`fixed inset-0 z-50 bg-black/80 flex items-center justify-center transition-opacity duration-1000 ${
-            animateBanner ? 'opacity-100' : 'opacity-0'
-          }`}
+          className={`fixed inset-0 z-50 bg-black/80 flex items-center justify-center transition-opacity duration-1000 ${animateBanner ? 'opacity-100' : 'opacity-0'
+            }`}
           onClick={closeBannerModal}
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className={`relative bg-neutral-900 rounded-xl overflow-hidden max-w-3xl w-full transform transition-all duration-1000 ${
-              animateBanner ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
-            }`}
+            className={`relative bg-neutral-900 rounded-xl overflow-hidden max-w-3xl w-full transform transition-all duration-1000 ${animateBanner ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
+              }`}
           >
             {/* CLOSE */}
             <button
@@ -148,15 +146,13 @@ export default function MovieCard({ movie }: Props) {
       {/* FULL VIDEO PLAYER MODAL */}
       {showPlayerModal && (
         <div
-          className={`fixed inset-0 z-50 bg-black/90 flex items-center justify-center transition-opacity duration-200 ${
-            animatePlayer ? 'opacity-100' : 'opacity-0'
-          }`}
+          className={`fixed inset-0 z-50 bg-black/90 flex items-center justify-center transition-opacity duration-200 ${animatePlayer ? 'opacity-100' : 'opacity-0'
+            }`}
           onClick={closePlayerModal}
         >
           <div
-            className={`relative w-full max-w-6xl transform transition-all duration-200 ${
-              animatePlayer ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
-            }`}
+            className={`relative w-full max-w-6xl transform transition-all duration-200 ${animatePlayer ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
+              }`}
             onClick={(e) => e.stopPropagation()}
           >
             {/* CLOSE VIDEO */}
