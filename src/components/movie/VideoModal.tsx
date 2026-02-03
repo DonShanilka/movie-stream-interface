@@ -7,7 +7,7 @@ interface Props {
   onClose: () => void;
 }
 
-export default function VideoModal({ open, movie, onClose }: Props) {
+export default function VideoModal({ open, movie, onClose }: Props) : any {
   return (
     <div
       className={`fixed inset-0 z-50 flex items-center justify-center bg-black/70 transition-opacity duration-300 ${

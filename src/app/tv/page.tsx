@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import Navbar from '@/components/layout/Navbar';
-import SeriesCard from '@/components/series/SeriesCard';
-import SeriesModal from '@/components/series/SeriesModal';
+import { useEffect, useState } from "react";
+import Navbar from "@/components/layout/Navbar";
+import SeriesCard from "@/components/series/SeriesCard";
+import SeriesModal from "@/components/series/SeriesModal";
 
 interface TVSeries {
   ID: number;
@@ -25,13 +25,15 @@ interface Episode {
 export default function TVSeriesPage() {
   const [seriesList, setSeriesList] = useState<TVSeries[]>([]);
   const [episodesMap, setEpisodesMap] = useState<Record<number, Episode[]>>({});
-  const [loadingEpisodes, setLoadingEpisodes] = useState<Record<number, boolean>>({});
+  const [loadingEpisodes, setLoadingEpisodes] = useState<
+    Record<number, boolean>
+  >({});
   const [selectedSeries, setSelectedSeries] = useState<TVSeries | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   // Load series
   useEffect(() => {
-    fetch('http://localhost:8081/api/series/getAllSeries')
+    fetch("http://localhost:8081/api/series/getAllSeries")
       .then((res) => {
         if (!res.ok) {
           throw new Error(`Failed to load series (${res.status})`);
@@ -43,7 +45,7 @@ export default function TVSeriesPage() {
       })
       .catch((err) => {
         console.error(err);
-        setError('Unable to load TV series.');
+        setError("Unable to load TV series.");
       });
   }, []);
 
@@ -61,7 +63,7 @@ export default function TVSeriesPage() {
         return res.json();
       })
       .then((episodes: Episode[]) => {
-        console.log("seriesID", seriesID)
+        console.log("seriesID", seriesID);
         setEpisodesMap((prev) => ({ ...prev, [seriesID]: episodes }));
       })
       .catch((err) => {

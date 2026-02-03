@@ -27,7 +27,7 @@ export default function MoviesPage() {
           <MovieCard
             key={movie.Id}
             movie={movie}
-            onPlay={(url) => {
+            onPlay={(url: any) => {
               setSelectedMovie(url);
               setOpen(true);
             }}
