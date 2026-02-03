@@ -12,7 +12,7 @@ const navItems = [
   { name: "Movies", href: "/movie" },
   { name: "TV Series", href: "/tv" },
   { name: "New & Popular", href: "/new-popular" },
-  { name: "My List", href: "/my-list" },
+  { name: "My List", href: "/mylist" },
 ];
 
 interface TVSeries {
