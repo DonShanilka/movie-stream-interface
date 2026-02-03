@@ -23,6 +23,8 @@ interface Props {
   movie: Movie;
 }
 
+// Template Literals ${}
+
 export default function MovieCard({ movie }: Props) {
   const [showBannerModal, setShowBannerModal] = useState(false);
   const [showPlayerModal, setShowPlayerModal] = useState(false);

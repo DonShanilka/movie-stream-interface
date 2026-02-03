@@ -26,31 +26,49 @@ export default function TVSeriesPage() {
   const [seriesList, setSeriesList] = useState<TVSeries[]>([]);
   const [episodesMap, setEpisodesMap] = useState<Record<number, Episode[]>>({});
   const [loadingEpisodes, setLoadingEpisodes] = useState<Record<number, boolean>>({});
-
   const [selectedSeries, setSelectedSeries] = useState<TVSeries | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   // Load series
   useEffect(() => {
-    fetch('http://localhost:8080/api/series/getAllSeries')
-      .then((res) => res.json())
-      .then(setSeriesList)
-      .catch(console.error);
+    fetch('http://localhost:8081/api/series/getAllSeries')
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`Failed to load series (${res.status})`);
+        }
+        return res.json();
+      })
+      .then((data: TVSeries[]) => {
+        setSeriesList(data);
+      })
+      .catch((err) => {
+        console.error(err);
+        setError('Unable to load TV series.');
+      });
   }, []);
 
   // Load episodes
   const loadEpisodes = (seriesID: number) => {
     if (episodesMap[seriesID]) return;
 
-    setLoadingEpisodes((p) => ({ ...p, [seriesID]: true }));
+    setLoadingEpisodes((prev) => ({ ...prev, [seriesID]: true }));
 
-    fetch(`http://localhost:8080/api/episodes/bySeriesId?seriesId=${seriesID}`)
-      .then((res) => res.json())
-      .then((episodes) =>
-        setEpisodesMap((p) => ({ ...p, [seriesID]: episodes }))
-      )
-      .finally(() =>
-        setLoadingEpisodes((p) => ({ ...p, [seriesID]: false }))
-      );
+    fetch(`http://localhost:8081/api/episodes/bySeriesId?seriesId=${seriesID}`)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`Failed to load episodes (${res.status})`);
+        }
+        return res.json();
+      })
+      .then((episodes: Episode[]) => {
+        setEpisodesMap((prev) => ({ ...prev, [seriesID]: episodes }));
+      })
+      .catch((err) => {
+        console.error(err);
+      })
+      .finally(() => {
+        setLoadingEpisodes((prev) => ({ ...prev, [seriesID]: false }));
+      });
   };
 
   return (
