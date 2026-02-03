@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { Play, Plus, ThumbsUp, X } from 'lucide-react';
+import { Play, Plus, ThumbsUp, X, Heart } from 'lucide-react';
+import { useFavorites } from '@/context/FavoritesContext';
 import VideoPlayer from './VideoPlayer';
 
 interface Movie {
@@ -24,6 +25,7 @@ interface Props {
 }
 
 export default function MovieCard({ movie }: Props) {
+  const { isFavorite, addFavorite, removeFavorite } = useFavorites();
   const [showBannerModal, setShowBannerModal] = useState(false);
   const [showPlayerModal, setShowPlayerModal] = useState(false);
   const [animateBanner, setAnimateBanner] = useState(false);
@@ -62,15 +64,17 @@ export default function MovieCard({ movie }: Props) {
   return (
     <div>
       {/* MOVIE CARD */}
-      <div className="relative group cursor-pointer" onMouseEnter={openBannerModal}>
-        <img
-          src={`data:image/png;base64,${movie.Thumbnail}`}
-          alt={movie.Title}
-          className="h-72 w-full object-cover rounded-lg transition-transform duration-1000 delay-400 group-hover:scale-110"
-        />
-        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition flex items-center justify-center rounded-lg">
-          <Play className="w-16 h-16 text-white" />
-        </div>
+      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition flex items-center justify-center rounded-lg gap-4" onClick={openBannerModal}>
+        <Play className="w-16 h-16 text-white" />
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            isFavorite(movie.Title) ? removeFavorite(movie.Title) : addFavorite({ id: movie.Title, type: 'movie', data: movie });
+          }}
+          className="absolute top-4 right-4 p-2 bg-black/50 rounded-full hover:bg-black/70 transition"
+        >
+          <Heart className={`w-6 h-6 ${isFavorite(movie.Title) ? 'fill-red-500 text-red-500' : 'text-white'}`} />
+        </button>
       </div>
 
       {/* BANNER + DETAILS MODAL */}
@@ -113,8 +117,11 @@ export default function MovieCard({ movie }: Props) {
                     <Play className="w-5 h-5 fill-black" />
                     Play
                   </button>
-                  <button className="p-3 bg-neutral-800 rounded-full">
-                    <Plus className="text-white" />
+                  <button
+                    onClick={() => isFavorite(movie.Title) ? removeFavorite(movie.Title) : addFavorite({ id: movie.Title, type: 'movie', data: movie })}
+                    className="p-3 bg-neutral-800 rounded-full hover:bg-neutral-700 transition"
+                  >
+                    <Heart className={`w-5 h-5 ${isFavorite(movie.Title) ? 'fill-red-500 text-red-500' : 'text-white'}`} />
                   </button>
                   <button className="p-3 bg-neutral-800 rounded-full">
                     <ThumbsUp className="text-white" />

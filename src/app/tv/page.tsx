@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Navbar from "@/components/layout/Navbar";
 import SeriesCard from "@/components/series/SeriesCard";
 import SeriesModal from "@/components/series/SeriesModal";
+import GenreBar from "@/components/UI/GenreBar";
 
 interface TVSeries {
   ID: number;
@@ -11,6 +12,14 @@ interface TVSeries {
   Description: string;
   Banner: string;
   Thumbnail: string;
+  Genre: string;
+  ReleaseYear: number;
+  Language: string;
+  SeasonCount: number;
+  Country: string;
+  AgeRating: string;
+  Rating: number;
+  Trailer?: string;
 }
 
 interface Episode {
@@ -24,6 +33,9 @@ interface Episode {
 
 export default function TVSeriesPage() {
   const [seriesList, setSeriesList] = useState<TVSeries[]>([]);
+  const [filteredSeries, setFilteredSeries] = useState<TVSeries[]>([]);
+  const [selectedGenre, setSelectedGenre] = useState("All");
+  const [genres, setGenres] = useState<string[]>([]);
   const [episodesMap, setEpisodesMap] = useState<Record<number, Episode[]>>({});
   const [loadingEpisodes, setLoadingEpisodes] = useState<
     Record<number, boolean>
@@ -42,12 +54,24 @@ export default function TVSeriesPage() {
       })
       .then((data: TVSeries[]) => {
         setSeriesList(data);
+        setFilteredSeries(data);
+        const uniqueGenres = Array.from(new Set(data.map(s => s.Genre))).filter(Boolean);
+        setGenres(uniqueGenres);
       })
       .catch((err) => {
         console.error(err);
         setError("Unable to load TV series.");
       });
   }, []);
+
+  // Filter Logic
+  useEffect(() => {
+    if (selectedGenre === "All") {
+      setFilteredSeries(seriesList);
+    } else {
+      setFilteredSeries(seriesList.filter(s => s.Genre === selectedGenre));
+    }
+  }, [selectedGenre, seriesList]);
 
   // Load episodes
   const loadEpisodes = (seriesID: number) => {
@@ -75,12 +99,18 @@ export default function TVSeriesPage() {
   };
 
   return (
-    <div className="bg-black min-h-screen text-white px-12 py-10">
+    <div className="bg-black min-h-screen text-white px-12 py-24">
       <Navbar />
-      <h1 className="text-3xl font-bold mb-10">TV Series</h1>
+      <h1 className="text-3xl font-bold mb-6">TV Series</h1>
 
-      <div className="grid grid-cols-5 gap-6">
-        {seriesList.map((series) => (
+      <GenreBar
+        genres={genres}
+        selectedGenre={selectedGenre}
+        onGenreSelect={setSelectedGenre}
+      />
+
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
+        {filteredSeries.map((series) => (
           <SeriesCard
             key={series.ID}
             series={series}
@@ -91,6 +121,18 @@ export default function TVSeriesPage() {
           />
         ))}
       </div>
+
+      {filteredSeries.length === 0 && !error && (
+        <div className="text-center py-20 text-gray-500">
+          No TV series found in this genre.
+        </div>
+      )}
+
+      {error && (
+        <div className="text-center py-20 text-red-500">
+          {error}
+        </div>
+      )}
 
       {/* ✅ SINGLE MODAL */}
       {selectedSeries && (
