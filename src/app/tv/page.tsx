@@ -61,6 +61,7 @@ export default function TVSeriesPage() {
         return res.json();
       })
       .then((episodes: Episode[]) => {
+        console.log("seriesID", seriesID)
         setEpisodesMap((prev) => ({ ...prev, [seriesID]: episodes }));
       })
       .catch((err) => {
