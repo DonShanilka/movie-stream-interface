@@ -36,7 +36,7 @@ export default function SeriesCard({
       <img
         src={`data:image/png;base64,${series.Banner}`}
         alt={series.Title}
-        className="w-full h-48 object-cover"
+        className="w-full h-full object-cover"
       />
       <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition">
         <button
@@ -46,9 +46,9 @@ export default function SeriesCard({
           <Heart className={`w-5 h-5 ${isFavorite(series.ID) ? 'fill-red-500 text-red-500' : 'text-white'}`} />
         </button>
       </div>
-      <div className="p-3">
+      {/* <div className="p-3">
         <h2 className="text-sm font-bold">{series.Title}</h2>
-      </div>
+      </div> */}
     </div>
   );
 }
