@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react';
 import EpisodeCard from './EpisodeCard';
 import { X, Play } from 'lucide-react';
+import VideoPlayer from '../movie/VideoPlayer';
 
 interface TVSeries {
   ID: number;
@@ -39,7 +40,7 @@ export default function SeriesModal({
   onClose: () => void;
 }) {
   const [season, setSeason] = useState(1);
-  const [showTrailer, setShowTrailer] = useState(false);
+  const [currentVideoUrl, setCurrentVideoUrl] = useState<string | null>(null);
 
   // Get all seasons from episodes
   const seasons = useMemo(() => {
@@ -60,23 +61,24 @@ export default function SeriesModal({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="bg-neutral-900 w-full max-w-3xl rounded-2xl mt-12 overflow-hidden shadow-2xl transform transition-transform duration-300 hover:scale-105"
+        className="bg-neutral-900 w-full max-w-3xl rounded-2xl mt-12 mb-12 overflow-hidden shadow-2xl transform transition-transform duration-300"
       >
         {/* Banner Section */}
         <div className="relative h-96">
           <img
             src={`data:image/png;base64,${series.Banner}`}
             className="w-full h-full object-cover"
+            alt={series.Title}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent" />
 
           {/* Trailer Button */}
           {series.Trailer && (
             <button
-              onClick={() => setShowTrailer(true)}
-              className="absolute top-82 right-8 bg-yellow-400 hover:bg-yellow-500 transition-colors px-4 py-2 rounded-full text-black font-semibold shadow-lg flex items-center gap-2"
+              onClick={() => setCurrentVideoUrl(`data:video/mp4;base64,${series.Trailer}`)}
+              className="absolute bottom-16 right-8 bg-yellow-400 hover:bg-yellow-500 transition-colors px-6 py-2 rounded-full text-black font-semibold shadow-lg flex items-center gap-2"
             >
-              <Play className="w-5 h-5" /> Trailer
+              <Play className="w-5 h-5 fill-current" /> Trailer
             </button>
           )}
 
@@ -159,36 +161,47 @@ export default function SeriesModal({
 
           {/* Loading */}
           {loading && (
-            <p className="text-gray-400 italic">Loading episodes…</p>
+            <div className="flex justify-center py-10">
+              <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-yellow-400"></div>
+            </div>
           )}
 
           {/* Episodes List */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {filteredEpisodes?.map((ep) => (
-              <EpisodeCard key={ep.ID} episode={ep} />
+              <EpisodeCard
+                key={ep.ID}
+                episode={ep}
+                onPlay={(url) => setCurrentVideoUrl(url)}
+              />
             ))}
           </div>
         </div>
 
-        {/* Trailer Modal */}
-        {showTrailer && series.Trailer && (
+        {/* Unified Video Player Modal */}
+        {currentVideoUrl && (
           <div
-            className="fixed inset-0 z-60 bg-black/90 flex justify-center items-center p-4"
-            onClick={() => setShowTrailer(false)}
+            className="fixed inset-0 z-[60] bg-black/95 flex justify-center items-center p-4"
+            onClick={() => setCurrentVideoUrl(null)}
           >
-            <div className="w-full max-w-4xl aspect-video relative">
-              <video
-                src={`data:video/mp4;base64,${series.Trailer}`}
-                controls
-                autoPlay
-                className="w-full h-full rounded-xl shadow-2xl"
-              />
-              <button
-                onClick={() => setShowTrailer(false)}
-                className="absolute top-4 right-4 bg-black/70 hover:bg-orange-600 p-3 rounded-full text-white shadow-lg"
-              >
-                <X className="w-5 h-5" />
-              </button>
+            <div
+              className="w-full max-w-5xl relative"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="bg-neutral-900 rounded-xl overflow-hidden shadow-2xl border border-white/10">
+                <div className="flex justify-between items-center p-4 border-b border-white/10">
+                  <h2 className="text-lg font-semibold text-white truncate pr-4">
+                    {currentVideoUrl.startsWith('data:') ? `${series.Title} - Trailer` : series.Title}
+                  </h2>
+                  <button
+                    onClick={() => setCurrentVideoUrl(null)}
+                    className="p-1 hover:bg-white/10 rounded-full transition"
+                  >
+                    <X className="w-6 h-6 text-white" />
+                  </button>
+                </div>
+                <VideoPlayer src={currentVideoUrl} autoPlay />
+              </div>
             </div>
           </div>
         )}
