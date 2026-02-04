@@ -64,23 +64,29 @@ export default function MovieCard({ movie }: Props) {
   return (
     <div>
       {/* MOVIE CARD */}
-      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition flex items-center justify-center rounded-lg gap-4" onClick={openBannerModal}>
-        <Play className="w-16 h-16 text-white" />
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            isFavorite(movie.Title) ? removeFavorite(movie.Title) : addFavorite({ id: movie.Title, type: 'movie', data: movie });
-          }}
-          className="absolute top-4 right-4 p-2 bg-black/50 rounded-full hover:bg-black/70 transition"
-        >
-          <Heart className={`w-6 h-6 ${isFavorite(movie.Title) ? 'fill-red-500 text-red-500' : 'text-white'}`} />
-        </button>
+      <div className="relative group cursor-pointer" onClick={openBannerModal}>
+        <img
+          src={`data:image/png;base64,${movie.Thumbnail}`}
+          alt={movie.Title}
+          className="h-72 w-full object-cover rounded-lg transition-transform duration-100 delay-400 group-hover:scale-110"
+        />
+        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition rounded-lg">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              isFavorite(movie.Title) ? removeFavorite(movie.Title) : addFavorite({ id: movie.Title, type: 'movie', data: movie });
+            }}
+            className="absolute top-4 right-4 p-2 bg-black/50 rounded-full hover:bg-black/70 transition"
+          >
+            <Heart className={`w-6 h-6 ${isFavorite(movie.Title) ? 'fill-red-500 text-red-500' : 'text-white'}`} />
+          </button>
+        </div>
       </div>
 
       {/* BANNER + DETAILS MODAL */}
       {showBannerModal && (
         <div
-          className={`fixed inset-0 z-50 bg-black/80 flex items-center justify-center transition-opacity duration-1000 ${animateBanner ? 'opacity-100' : 'opacity-0'
+          className={`fixed inset-0 z-50 flex items-center justify-center transition-opacity duration-1000 ${animateBanner ? 'opacity-100' : 'opacity-0'
             }`}
           onClick={closeBannerModal}
         >

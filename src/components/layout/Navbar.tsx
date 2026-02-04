@@ -11,7 +11,7 @@ const navItems = [
   { name: "Home", href: "/" },
   { name: "Movies", href: "/movie" },
   { name: "TV Series", href: "/tv" },
-  { name: "New & Popular", href: "/new-popular" },
+  { name: "New & Popular", href: "/newAndpopuler" },
   { name: "My List", href: "/mylist" },
 ];
 

@@ -32,9 +32,10 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
         }
     }, []);
 
-    // Save to localStorage on change
+    // Save to localStorage on change (strip heavy data to avoid quota exceeded error)
     useEffect(() => {
-        localStorage.setItem('streamberry_favorites', JSON.stringify(favorites));
+        const minimalFavorites = favorites.map(({ id, type }) => ({ id, type }));
+        localStorage.setItem('streamberry_favorites', JSON.stringify(minimalFavorites));
     }, [favorites]);
 
     const addFavorite = (item: FavoriteItem) => {

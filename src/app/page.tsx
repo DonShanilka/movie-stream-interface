@@ -44,10 +44,9 @@ const movieImages = [
 const movies = Array.from({ length: 20 }).map((_, i) => ({
   id: i + 1,
   title: `Movie ${i + 1}`,
-  rating: (Math.random() * 2 + 7).toFixed(1),
-  image: `${
-    movieImages[i % movieImages.length]
-  }?auto=format&fit=crop&w=400&q=80`,
+  rating: (8.5 + (i % 10) / 10).toFixed(1),
+  image: `${movieImages[i % movieImages.length]
+    }?auto=format&fit=crop&w=400&q=80`,
   video:
     "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
 }));
