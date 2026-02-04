@@ -1,4 +1,5 @@
 import { FavoritesProvider } from '@/context/FavoritesContext';
+import { AuthProvider } from '@/context/AuthContext';
 import './globals.css';
 
 export const metadata = {
@@ -10,9 +11,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className="bg-black text-white">
-        <FavoritesProvider>
-          {children}
-        </FavoritesProvider>
+        <AuthProvider>
+          <FavoritesProvider>
+            {children}
+          </FavoritesProvider>
+        </AuthProvider>
       </body>
     </html>
   );

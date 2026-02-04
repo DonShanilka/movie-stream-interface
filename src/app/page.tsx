@@ -10,7 +10,7 @@ const featuredMovies = [
     id: 1,
     title: "Jurassic World Rebith",
     genre: "Sci-Fi / Adventure",
-    discription:
+    description:
       "Five years post-Jurassic World: Dominion (2022), an expedition braves isolated equatorial regions to extract DNA from three massive prehistoric creatures for a groundbreaking medical breakthrough.",
     year: 2025,
     duration: "200 min",
@@ -90,7 +90,6 @@ export default function Home() {
               style={{ backgroundImage: `url(${movie.image})` }}
             >
               <div className="absolute inset-0 bg-gradient-to-r from-black via-black/10 to-transparent" />
-              {/* <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" /> */}
             </div>
 
             <div className="relative h-full flex items-center px-12">
@@ -98,7 +97,7 @@ export default function Home() {
                 <p className="text-yellow-400 mb-3 text-sm">{movie.genre}</p>
 
                 <h1 className="text-3xl font-black mb-4">{movie.title}</h1>
-                <p className="text-gray-400 mb-6 w-96">{movie.discription}</p>
+                <p className="text-gray-400 mb-6 w-96">{movie.description}</p>
 
                 <div className="flex gap-4 text-sm text-gray-300 mb-6">
                   <span>{movie.year}</span>
@@ -172,32 +171,6 @@ export default function Home() {
             </div>
           </div>
         )}
-
-        {/* ================= ANIMATIONS ================= */}
-        <style jsx global>{`
-          @keyframes fadeIn {
-            from {
-              opacity: 0;
-            }
-            to {
-              opacity: 1;
-            }
-          }
-          @keyframes scaleIn {
-            from {
-              transform: scale(0.9);
-            }
-            to {
-              transform: scale(1);
-            }
-          }
-          .animate-fadeIn {
-            animation: fadeIn 0.3s ease;
-          }
-          .animate-scaleIn {
-            animation: scaleIn 0.25s ease;
-          }
-        `}</style>
       </div>
     </div>
   );
