@@ -85,7 +85,7 @@ export default function SeriesModal({
           {/* Close Button */}
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 bg-black/70 hover:bg-orange-600 transition-colors p-3 rounded-full text-white shadow-lg"
+            className="absolute top-4 right-4 bg-black/70 hover:bg-red-500 transition-colors p-3 rounded-full text-white shadow-lg"
           >
             <X className="w-5 h-5" />
           </button>
