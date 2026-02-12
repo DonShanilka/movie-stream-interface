@@ -14,9 +14,7 @@ export default function MyListPage() {
   const [loading, setLoading] = useState(true);
   const [selectedSeries, setSelectedSeries] = useState<any | null>(null);
   const [episodesMap, setEpisodesMap] = useState<Record<number, any[]>>({});
-  const [loadingEpisodes, setLoadingEpisodes] = useState<
-    Record<number, boolean>
-  >({});
+  const [loadingEpisodes, setLoadingEpisodes] = useState<Record<number, boolean>>({});
 
   useEffect(() => {
     const fetchData = async () => {
