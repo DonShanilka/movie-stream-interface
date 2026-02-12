@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, createRef } from "react";
 import {
   Play,
   Pause,
@@ -7,7 +7,7 @@ import {
   Maximize,
   SkipBack,
   SkipForward,
-} from 'lucide-react';
+} from "lucide-react";
 
 interface Props {
   src: string;
@@ -34,12 +34,12 @@ const VideoPlayer: React.FC<Props> = ({ src, autoPlay = false }) => {
     const updateTime = () => setCurrentTime(video.currentTime);
     const updateDuration = () => setDuration(video.duration);
 
-    video.addEventListener('timeupdate', updateTime);
-    video.addEventListener('loadedmetadata', updateDuration);
+    video.addEventListener("timeupdate", updateTime);
+    video.addEventListener("loadedmetadata", updateDuration);
 
     return () => {
-      video.removeEventListener('timeupdate', updateTime);
-      video.removeEventListener('loadedmetadata', updateDuration);
+      video.removeEventListener("timeupdate", updateTime);
+      video.removeEventListener("loadedmetadata", updateDuration);
     };
   }, [autoPlay]);
 
@@ -84,7 +84,10 @@ const VideoPlayer: React.FC<Props> = ({ src, autoPlay = false }) => {
     const video = videoRef.current;
     if (!video) return;
 
-    video.currentTime = Math.max(0, Math.min(duration, video.currentTime + sec));
+    video.currentTime = Math.max(
+      0,
+      Math.min(duration, video.currentTime + sec)
+    );
   };
 
   const toggleFullscreen = () => {
@@ -96,9 +99,11 @@ const VideoPlayer: React.FC<Props> = ({ src, autoPlay = false }) => {
   };
 
   const formatTime = (t: number) =>
-    `${Math.floor(t / 60).toString().padStart(2, '0')}:${Math.floor(t % 60)
+    `${Math.floor(t / 60)
       .toString()
-      .padStart(2, '0')}`;
+      .padStart(2, "0")}:${Math.floor(t % 60)
+      .toString()
+      .padStart(2, "0")}`;
 
   return (
     <div
@@ -118,7 +123,7 @@ const VideoPlayer: React.FC<Props> = ({ src, autoPlay = false }) => {
       {/* Controls */}
       <div
         className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/90 to-transparent p-4 transition-opacity ${
-          showControls ? 'opacity-100' : 'opacity-0'
+          showControls ? "opacity-100" : "opacity-0"
         }`}
       >
         {/* Progress */}
@@ -130,7 +135,9 @@ const VideoPlayer: React.FC<Props> = ({ src, autoPlay = false }) => {
           onChange={handleSeek}
           className="w-full h-1 mb-3 slider"
           style={{
-            background: `linear-gradient(to right, #facc15 ${(currentTime / duration) * 100}%, #374151 0%)`,
+            background: `linear-gradient(to right, #facc15 ${
+              (currentTime / duration) * 100
+            }%, #374151 0%)`,
           }}
         />
 
@@ -151,7 +158,11 @@ const VideoPlayer: React.FC<Props> = ({ src, autoPlay = false }) => {
             {/* Mute / Volume */}
             <div className="flex items-center gap-2">
               <button onClick={toggleMute}>
-                {isMuted || volume === 0 ? <VolumeX size={22} /> : <Volume2 size={22} />}
+                {isMuted || volume === 0 ? (
+                  <VolumeX size={22} />
+                ) : (
+                  <Volume2 size={22} />
+                )}
               </button>
               <input
                 type="range"
@@ -162,7 +173,9 @@ const VideoPlayer: React.FC<Props> = ({ src, autoPlay = false }) => {
                 onChange={handleVolumeChange}
                 className="w-20 h-1 slider"
                 style={{
-                  background: `linear-gradient(to right, #facc15 ${volume * 100}%, #374151 0%)`,
+                  background: `linear-gradient(to right, #facc15 ${
+                    volume * 100
+                  }%, #374151 0%)`,
                 }}
               />
             </div>
