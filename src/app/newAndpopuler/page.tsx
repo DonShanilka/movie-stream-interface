@@ -19,7 +19,7 @@ export default function NewAndPopularPage() {
             try {
                 const [moviesRes, seriesRes] = await Promise.all([
                     fetch('http://localhost:8080/api/movies/getAllMovies'),
-                    fetch('http://localhost:8081/api/series/getAllSeries')
+                    fetch('http://localhost:8086/api/series/getAllSeries')
                 ]);
 
                 if (moviesRes.ok) setMovies(await moviesRes.json());

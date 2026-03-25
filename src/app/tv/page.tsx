@@ -79,7 +79,7 @@ export default function TVSeriesPage() {
 
     setLoadingEpisodes((prev) => ({ ...prev, [seriesID]: true }));
 
-    fetch(`http://localhost:8081/api/episodes/bySeriesId?seriesId=${seriesID}`)
+    fetch(`http://localhost:8086/api/episodes/bySeriesId?seriesId=${seriesID}`)
       .then((res) => {
         if (!res.ok) {
           throw new Error(`Failed to load episodes (${res.status})`);

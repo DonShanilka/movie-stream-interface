@@ -21,7 +21,7 @@ export default function MyListPage() {
       try {
         const [moviesRes, seriesRes] = await Promise.all([
           fetch("http://localhost:8080/api/movies/getAllMovies"),
-          fetch("http://localhost:8081/api/series/getAllSeries"),
+          fetch("http://localhost:8086/api/series/getAllSeries"),
         ]);
 
         if (moviesRes.ok) setMovies(await moviesRes.json());
@@ -40,7 +40,7 @@ export default function MyListPage() {
     if (episodesMap[seriesID]) return;
     setLoadingEpisodes((prev) => ({ ...prev, [seriesID]: true }));
 
-    fetch(`http://localhost:8081/api/episodes/bySeriesId?seriesId=${seriesID}`)
+    fetch(`http://localhost:8086/api/episodes/bySeriesId?seriesId=${seriesID}`)
       .then((res) => res.json())
       .then((episodes) => {
         setEpisodesMap((prev) => ({ ...prev, [seriesID]: episodes }));
