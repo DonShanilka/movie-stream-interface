@@ -45,7 +45,7 @@ export default function TVSeriesPage() {
 
   // Load series
   useEffect(() => {
-    fetch("http://localhost:8081/api/series/getAllSeries")
+    fetch("http://localhost:8086/api/series/getAllSeries")
       .then((res) => {
         if (!res.ok) {
           throw new Error(`Failed to load series (${res.status})`);
