@@ -91,7 +91,7 @@ export default function Navbar() {
       try {
         const [moviesRes, seriesRes] = await Promise.all([
           fetch("http://localhost:8080/api/movies/getAllMovies"),
-          fetch("http://localhost:8081/api/series/getAllSeries"),
+          fetch("http://localhost:8086/api/series/getAllSeries"),
         ]);
 
         const moviesJson = await moviesRes.json();
@@ -126,7 +126,7 @@ export default function Navbar() {
     setLoadingEpisodes((prev) => ({ ...prev, [series.ID]: true }));
     try {
       const res = await fetch(
-        `http://localhost:8081/api/episodes/bySeriesId?seriesId=${series.ID}`,
+        `http://localhost:8086/api/episodes/bySeriesId?seriesId=${series.ID}`,
       );
       if (res.ok) {
         const data = await res.json();

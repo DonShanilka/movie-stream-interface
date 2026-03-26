@@ -38,7 +38,7 @@ export default function NewAndPopularPage() {
         if (episodesMap[seriesID]) return;
         setLoadingEpisodes((prev) => ({ ...prev, [seriesID]: true }));
 
-        fetch(`http://localhost:8081/api/episodes/bySeriesId?seriesId=${seriesID}`)
+        fetch(`http://localhost:8086/api/episodes/bySeriesId?seriesId=${seriesID}`)
             .then((res) => res.json())
             .then((episodes) => {
                 setEpisodesMap((prev) => ({ ...prev, [seriesID]: episodes }));
